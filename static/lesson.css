@@ -1,0 +1,49 @@
+body
+{
+    color: white;
+    background-color: #333;
+}
+
+#progress-bar
+{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 5px;
+    background-color: lime;
+}
+
+#problem-wrapper
+{
+    position: absolute;
+    top: 10px;
+    width: 30%;
+    height: 100%;
+    text-align: center;
+    font-size: 64pt;
+}
+#answers-wrapper
+{
+    position: absolute;
+    top: 10px;
+    left: 30%;
+    width: 70%;
+    height: 100%;
+}
+
+#answers-wrapper > div
+{
+    position: relative;
+}
+
+.answer
+{
+    border: 2px solid #999;
+    background-color: #444;
+    padding: 0.5em 1em;
+    margin: 0.5em;
+    display: inline-block;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20pt;
+}

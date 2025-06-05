@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Lesson</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css')|version }}"/>
+    <link rel="stylesheet" href="{{ url_for('static', filename='lesson.css')|version }}"/>
+</head>
+<body>
+
+    <div id="lesson-wrapper"></div>
+
+    <script type="text/javascript">
+        var data_url = ' url_for("data")|safe ';
+    </script>
+    <script src="{{ url_for('static', filename='third_party/react.production.min.js')|version }}"></script>
+    <script src="{{ url_for('static', filename='third_party/react-dom.production.min.js')|version }}"></script>
+    <script src="{{ url_for('static', filename='third_party/jquery-3.2.1.min.js')|version }}"></script>
+    <script src="{{ url_for('static', filename='compiled/lesson.js')|version }}" type="text/javascript"></script>
+</body>
+</html>

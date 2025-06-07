@@ -35,7 +35,9 @@ class AnswersSection extends React.Component {
         }
     }
 
-    _onClick(clicked_answer) {
+    _onClick(event, clicked_answer) {
+        event.preventDefault();
+
         if (clicked_answer === (this.props.problem[0] + this.props.problem[1]))
             this.props.on_correct();
         else
@@ -52,7 +54,7 @@ class AnswersSection extends React.Component {
             {answers.map((answer) => {
                 return (
                     <React.Fragment>
-                        <span className="answer" key={answer} onClick={() => this._onClick(answer)}>
+                        <span className="answer" key={answer} onClick={(event) => this._onClick(event, answer)}>
                             {answer}
                         </span>
                     </React.Fragment>
@@ -138,24 +140,26 @@ class AppUI extends React.Component {
     // //////////////// Render
     render() {
         return (
-            <div id="lesson-wrapper" style={{
-                'backgroundColor': this.state.success ? '#287528' : 'transparent'
-            }}>
-                <ProgressBar
-                    progress={this.state.current / this.state.problems.length}
-                />
-                <ProblemSection
-                    problem={this.state.problems[this.state.current]}
-                />
-                <AnswersSection
-                    max={this.state.max*2}
-                    problem={this.state.problems[this.state.current]}
-                    on_correct={() => this._onCorrect()}
-                    on_incorrect={() => this._onIncorrect()}
-                />
+            <React.Fragment>
+                <div id="lesson-wrapper" style={{
+                    'backgroundColor': this.state.success ? '#287528' : 'transparent'
+                }}>
+                    <ProgressBar
+                        progress={this.state.current / this.state.problems.length}
+                    />
+                    <ProblemSection
+                        problem={this.state.problems[this.state.current]}
+                    />
+                    <AnswersSection
+                        max={this.state.max*2}
+                        problem={this.state.problems[this.state.current]}
+                        on_correct={() => this._onCorrect()}
+                        on_incorrect={() => this._onIncorrect()}
+                    />
 
+                </div>
                 <button id="refresh-btn" onClick={() => window.location.reload() }>Refresh</button>
-            </div>
+            </React.Fragment>
         );
     }
 }

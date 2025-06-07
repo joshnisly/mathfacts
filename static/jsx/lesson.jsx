@@ -27,6 +27,22 @@ class ProblemSection extends React.Component {
     }
 }
 
+class HistorySection extends React.Component {
+    constructor()
+    {
+        super();
+        this.state = {}
+    }
+
+    render() {
+        let last_two = this.props.problems.slice(-2);
+        last_two.reverse();
+        return <div id="history-wrapper">
+            {last_two.map((problem) => <div>{problem[0]} + {problem[1]} = {problem[0] + problem[1]}</div>)}
+        </div>;
+    }
+}
+
 
 class AnswersSection extends React.Component {
     constructor() {
@@ -82,20 +98,26 @@ class AppUI extends React.Component {
             method: 'GET',
             contentType: 'application/json'
         });*/
-        let num_problems = 20;
+        // TODO: do problem generation server-side
+        let iVersion = 1;
+        let problems = loadFromBrowser('problems', [], iVersion);
         let max_part = 10;
-        let problems = [];
-        for (let i = 0; i < num_problems; i++)
+        if (!problems.length)
         {
-            problems.push([this._randInRange(0, max_part), this._randInRange(0, max_part)])
+            let num_problems = 20;
+            for (let i = 0; i < num_problems; i++)
+                problems.push([this._randInRange(0, max_part), this._randInRange(0, max_part)])
+            saveToBrowser('problems', problems, iVersion);
         }
         this._success = new window.Audio(success_url);
         this._failure = new window.Audio(failure_url);
         this.state = {
             'max': max_part,
             'problems': problems,
-            'current': 0
+            'current': loadFromBrowser('current_problem', 0, 1)
         };
+
+        this.asked_for_fullscreen = false;
     }
     _randInRange(min, max)
     {
@@ -107,7 +129,12 @@ class AppUI extends React.Component {
     {
         if (this.state.success)
             return;
-        document.body.requestFullscreen();
+
+        if (!this.asked_for_fullscreen)
+        {
+            document.body.requestFullscreen();
+            this.asked_for_fullscreen = true;
+        }
 
         this._success.play();
         window.setTimeout(() => {
@@ -119,8 +146,14 @@ class AppUI extends React.Component {
         });
         window.setTimeout(() => {
             if (this.state.current === this.state.problems.length-1)
+            {
+                saveToBrowser('problems', [], 1);
+                saveToBrowser('current_problem', 0, 1);
                 window.location.reload();
+                return;
+            }
 
+            saveToBrowser('current_problem', this.state.current + 1, 1);
             this.setState({
                 'success': false,
                 'current': this.state.current + 1
@@ -149,6 +182,9 @@ class AppUI extends React.Component {
                     />
                     <ProblemSection
                         problem={this.state.problems[this.state.current]}
+                    />
+                    <HistorySection
+                        problems={this.state.problems.slice(0, this.state.current)}
                     />
                     <AnswersSection
                         max={this.state.max*2}

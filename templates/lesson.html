@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Lesson</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css')|version }}"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='lesson.css')|version }}"/>
 </head>
@@ -13,6 +13,8 @@
 
     <script type="text/javascript">
         var data_url = ' url_for("data")|safe ';
+        var success_url = "{{ url_for('static', filename='success.mp3')|version }}";
+        var failure_url = "{{ url_for('static', filename='failure.mp3')|version }}";
     </script>
     <script src="{{ url_for('static', filename='third_party/react.production.min.js')|version }}"></script>
     <script src="{{ url_for('static', filename='third_party/react-dom.production.min.js')|version }}"></script>

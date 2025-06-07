@@ -38,6 +38,8 @@ class AnswersSection extends React.Component {
     _onClick(clicked_answer) {
         if (clicked_answer === (this.props.problem[0] + this.props.problem[1]))
             this.props.on_correct();
+        else
+            this.props.on_incorrect();
     }
 
     render() {
@@ -85,6 +87,8 @@ class AppUI extends React.Component {
         {
             problems.push([this._randInRange(0, max_part), this._randInRange(0, max_part)])
         }
+        this._success = new window.Audio(success_url);
+        this._failure = new window.Audio(failure_url);
         this.state = {
             'max': max_part,
             'problems': problems,
@@ -99,16 +103,44 @@ class AppUI extends React.Component {
 
     _onCorrect()
     {
+        if (this.state.success)
+            return;
+        document.body.requestFullscreen();
+
+        this._success.play();
+        window.setTimeout(() => {
+            this._success.pause();
+            this._success.currentTime = 0;
+        }, 1500);
         this.setState({
-            'current': this.state.current + 1
+            'success': true
         });
+        window.setTimeout(() => {
+            if (this.state.current === this.state.problems.length-1)
+                window.location.reload();
+
+            this.setState({
+                'success': false,
+                'current': this.state.current + 1
+            });
+        }, 500);
+    }
+
+    _onIncorrect()
+    {
+        if (this.state.success)
+            return;
+
+        this._failure.play();
     }
 
 
     // //////////////// Render
     render() {
         return (
-            <div>
+            <div id="lesson-wrapper" style={{
+                'backgroundColor': this.state.success ? '#287528' : 'transparent'
+            }}>
                 <ProgressBar
                     progress={this.state.current / this.state.problems.length}
                 />
@@ -119,7 +151,10 @@ class AppUI extends React.Component {
                     max={this.state.max*2}
                     problem={this.state.problems[this.state.current]}
                     on_correct={() => this._onCorrect()}
+                    on_incorrect={() => this._onIncorrect()}
                 />
+
+                <button id="refresh-btn" onClick={() => window.location.reload() }>Refresh</button>
             </div>
         );
     }
